@@ -1,5 +1,6 @@
 import { BaseController } from 'types';
-import BaseContext from '../../base/BaseContext';
+import { IVanillaContext } from 'types/vanillaServer';
+import BaseContext from '../../common/BaseContext';
 import createUser from '../useCases/createUser';
 import getUserByName from '../useCases/getUserByName';
 import sayHello from '../useCases/sayHello';
@@ -8,9 +9,7 @@ type UserControllersKeys = 'sayHello' | 'createUser' | 'getOneByName';
 
 const userControllers: Record<UserControllersKeys, BaseController> = {
   sayHello: async (ctx) => {
-    const message = await sayHello();
-    // console.log(ctx.locals);
-    ctx.status(200).send(message);
+    ctx.status(200).send("say hello");
   },
   createUser: async (ctx) => {
     // const createdUser = await createUser({ name: 'saurabh' });

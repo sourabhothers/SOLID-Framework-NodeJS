@@ -1,9 +1,11 @@
 import UserEntity from '../core/user/UserEntity';
 import UserRepoBase from '../core/user/UserRepoBase';
-import BaseContext from '../core/base/BaseContext';
+import BaseContext from '../core/common/BaseContext';
 
 export type BaseController = (ctx: BaseContext) => void | Promise<void>;
-export type BaseMiddleware = (ctx: BaseContext) => void | Promise<void>;
+export type BaseMiddleware = (
+  ctx: BaseContext,
+) => void | Promise<void | boolean> | boolean;
 
 export type RouteMethods =
   | 'all'
@@ -22,8 +24,8 @@ export interface IBaseRoute {
   method: RouteMethods;
 }
 
-export interface ServiceLocator<UserRepoORM=23065> {
-  userRepository: UserRepoORM;
+export interface ServiceLocator<UserRepoORMName> {
+  userRepository: UserRepoORMName;
   userSerializer: {
     serialize: (user: UserEntity) => {
       id: string;

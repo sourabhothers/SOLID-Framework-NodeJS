@@ -1,19 +1,20 @@
-import { Context as KoaContext } from 'koa';
+import { IncomingMessage, ServerResponse } from 'http';
+import { IVanillaContext } from 'types/vanillaServer';
 import BaseContext from '../../../core/common/BaseContext';
 
-// Koa specific context builder
-// export default class BuildKoaContext extends BaseContext {
+// Vanilla specific context builder
+// export default class BuildVanillaContext extends BaseContext {
 //   statusCode: number = 200;
 //   responseData: any;
 //   bodyData: unknown;
 //   frameworkName: string;
-//   frameworkCtx: KoaContext;
-//   constructor(koaCtx: KoaContext) {
+//   frameworkCtx: VanillaContext;
+//   constructor(vanillaCtx: VanillaContext) {
 //     super();
-//     this.frameworkCtx = koaCtx;
+//     this.frameworkCtx = vanillaCtx;
 //     // Set request body
-//     this.bodyData = koaCtx.body;
-//     this.frameworkName = 'koa';
+//     this.bodyData = vanillaCtx.body;
+//     this.frameworkName = 'vanilla';
 //   }
 //   status = (statusCode: number) => {
 //     this.statusCode = statusCode;
@@ -24,19 +25,19 @@ import BaseContext from '../../../core/common/BaseContext';
 //     this.execute();
 //   };
 //   execute = () => {
-//     const koaCtx = this.frameworkCtx;
-//     koaCtx.status = this.statusCode;
-//     koaCtx.body = this.responseData;
+//     const vanillaCtx = this.frameworkCtx;
+//     vanillaCtx.status = this.statusCode;
+//     vanillaCtx.body = this.responseData;
 //   };
 // }
 
-const BuildKoaContext = (koaCtx: KoaContext): BaseContext => {
+const BuildVanillaContext = (context: IVanillaContext): BaseContext => {
   return {
-    bodyData: koaCtx.body,
+    bodyData: '',
     statusCode: 200,
     responseData: '',
-    frameworkName: 'koa',
-    frameworkCtx: koaCtx,
+    frameworkName: 'vanilla',
+    frameworkCtx: context,
     locals: {},
     status: function (statusCode: number) {
       this.statusCode = statusCode;
@@ -47,15 +48,13 @@ const BuildKoaContext = (koaCtx: KoaContext): BaseContext => {
       this.execute();
     },
     json: function (objData: { [key: string]: any }) {
-      const koaCtx = this.frameworkCtx as KoaContext;
-      koaCtx.set('Content-Type', 'application/json; charset: utf-8');
+      context.res.setHeader('Content-Type', 'application/json; charset: utf-8');
       this.responseData = JSON.stringify(objData);
       this.execute();
     },
     execute: function () {
-      const koaCtx = this.frameworkCtx as KoaContext;
-      koaCtx.status = this.statusCode;
-      koaCtx.body = this.responseData;
+      context.res.statusCode = this.statusCode;
+      context.res.end(this.responseData);
     },
     stopNext: () => {
       return true;
@@ -63,4 +62,4 @@ const BuildKoaContext = (koaCtx: KoaContext): BaseContext => {
   };
 };
 
-export default BuildKoaContext;
+export default BuildVanillaContext;

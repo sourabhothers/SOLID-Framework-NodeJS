@@ -3,8 +3,10 @@ export default abstract class BaseContext {
   abstract responseData: any;
   abstract bodyData: unknown;
   abstract locals: { [key: string]: any };
-  abstract frameworkName: string;
+  abstract frameworkName: 'koa' | 'vanilla';
   abstract frameworkCtx: unknown;
+  // params: { [key: string]: string };
+  // query: { [key: string]: string };
   status = (statusCode: number) => {
     throw new Error('BaseContext status method not implemented .');
     return this;
@@ -20,5 +22,8 @@ export default abstract class BaseContext {
   execute = () => {
     throw new Error('BaseContext execute method not implemented .');
     return;
+  };
+  stopNext = (): true => {
+    return true;
   };
 }

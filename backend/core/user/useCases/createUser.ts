@@ -1,4 +1,4 @@
-import serviceLocator from '../../serviceLocator';
+import serviceLocator from '../../common/serviceLocator';
 import UserEntity from '../UserEntity';
 
 export default async function createUser(user: UserEntity) {

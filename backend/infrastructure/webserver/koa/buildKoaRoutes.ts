@@ -30,7 +30,11 @@ const buildKoaRoutesArray = () => {
           // Middlewares
           if (middlewares && middlewares?.length > 0) {
             for (let i = 0; i < middlewares.length; i++) {
-              if (Array.isArray(middlewares)) await middlewares[i](builtKoaCtx);
+              if (Array.isArray(middlewares)) {
+                const shouldStopNextFn =
+                  (await middlewares[i](builtKoaCtx)) === true;
+                if (shouldStopNextFn) return;
+              }
             }
           }
           await controller(builtKoaCtx);
